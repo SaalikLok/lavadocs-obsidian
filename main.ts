@@ -2,18 +2,18 @@ import { App, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
 // Remember to rename these classes and interfaces!
 
-interface MyPluginSettings {
+interface LavadocsPluginSettings {
 	lavaKey: string;
 	username: string;
 }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
+const DEFAULT_SETTINGS: LavadocsPluginSettings = {
 	lavaKey: '',
 	username: ''
 }
 
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+export default class LavadocsPlugin extends Plugin {
+	settings: LavadocsPluginSettings;
 
 	async onload() {
 		await this.loadSettings();
@@ -114,9 +114,9 @@ export default class MyPlugin extends Plugin {
 }
 
 class LavadocsSettings extends PluginSettingTab {
-	plugin: MyPlugin;
+	plugin: LavadocsPlugin;
 
-	constructor(app: App, plugin: MyPlugin) {
+	constructor(app: App, plugin: LavadocsPlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
