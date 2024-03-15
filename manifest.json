@@ -1,11 +1,11 @@
 {
-	"id": "sample-plugin",
-	"name": "Sample Plugin",
+	"id": "lavadocs",
+	"name": "Lavadocs",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
+	"description": "Public docs, from the fires of your Obsidian vault.",
+	"author": "Saalik Lokhandwala",
+	"authorUrl": "https://saaliklok.com",
+	"fundingUrl": "https://lavadocs.com",
 	"isDesktopOnly": false
 }
