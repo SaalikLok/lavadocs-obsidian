@@ -1,18 +1,10 @@
 # The Lavadocs Obsidian Plugin
 
-Welcome to the Lavadocs plugin for Obsidian! This plugin seamlessly integrates your Obsidian note-taking experience with Lavadocs, allowing you to share your documents effortlessly. Here's everything you need to know to get started.
-
-## Features
-
-- **Seamless Integration**: Connect your Obsidian workspace with Lavadocs to share your documents online.
-- **Simple Sharing**: Push your Obsidian documents directly to the Lavadocs server with just a click.
-- **Flexible Pricing**: Start with 50 free hosted documents and expand your collection with affordable hosting packages.
-
-## Getting Started
+Welcome to the [Lavadocs](https://lavadocs.com) plugin for Obsidian! This plugin integrates your Obsidian vault with Lavadocs, so it's easy to share one-off documents, whenever you need to. Here's everything you need to get started.
 
 ### Prerequisites
 
-- A Lavadocs account is required to use this plugin. 
+- A [Lavadocs](https://lavadocs.com) account is required to use this plugin. 
 
 ### Manual Installation
 
@@ -26,10 +18,9 @@ Welcome to the Lavadocs plugin for Obsidian! This plugin seamlessly integrates y
 
 After installing the plugin, you'll need to connect your Lavadocs account:
 
-1. Go to the Lavadocs plugin settings in Obsidian.
-2. In your browser, log into Lavadocs and locate your username and API key. (You can find both in your [Account Settings](https://lavadocs.com/users/edit))
-3. Enter your Lavadocs username and your “Lava Key” to authenticate your account.
-4. Once authenticated, you're ready to start sharing your documents with Lavadocs directly from Obsidian.
+1. In your browser, log into Lavadocs and copy your `Lava Key`. (It's in your [Account Settings](https://lavadocs.com/users/edit))
+2. In Obsidian, head to Settings > Community Plugins > Lavadocs.
+3. Paste in your “Lava Key” to authenticate your account.
 
 ## Usage
 
@@ -37,22 +28,24 @@ With the Lavadocs plugin enabled, sharing your documents is straightforward:
 
 1. Open the document you wish to share in Obsidian.
 2. Click on the newly added ⛰️ mountain icon in your sidebar, or run “Push to Lavadocs” from your command palette.
-3. Your document will be immediately pushed to the Lavadocs server for hosting, and a window with your pushed document should open up!
+3. Your document will be pushed to Lavadocs, and you should be able to access and share it.
 
 ## Lavadocs Pricing
 
-- **Free Tier**: Enjoy hosting up to 50 documents completely free.
-- **Additional Documents**: For every 100 additional documents hosted, the cost is just $4.99.
+There's more on the [landing page](https://lavadocs.com/home), but the TLDR is: Your docs are yours to keep.
 
-Expand your online presence without breaking the bank.
+- **Start With**: 50 documents free.
+- **Additional Documents**: For every 100 additional documents, it's $4.99.
 
 ## Privacy
 
-Your privacy is important! It’s part of the reason I built this – I’d rather not have my document contents being sold. Please review our [Privacy Policy](https://lavadocs.com/privacy-policy) to understand how Lavadocs handles data.
+Your privacy is important! It’s part of the reason I built this. Please review the [Privacy Policy](https://lavadocs.com/privacy_policy) to understand how Lavadocs handles data.
+
+TL;DR - I don't sell, share, or do anything other than store the docs you push to Lavadocs. I might share aggregated numbers every now and then: "5 docs were created this week, wooot!"
 
 ## Support
 
-Encountering issues or have queries related to the Lavadocs plugin? Do not hesitate to reach out to our support team for assistance.
+If you encounter any issues, reach out to me: saalik@tangibleinfo.com.
 
 ## License
 
