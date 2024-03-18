@@ -23,7 +23,7 @@ export default class LavadocsPlugin extends Plugin {
 
 		this.addCommand({
 			id: 'push-to-lavadocs',
-			name: 'Push to Lavadocs',
+			name: 'Push',
 			callback: () => {
 				this.pushToLavadocs();
 			}
