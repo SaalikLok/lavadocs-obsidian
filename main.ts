@@ -19,7 +19,11 @@ export default class LavadocsPlugin extends Plugin {
 		const content = await this.getActiveFileContent();
 		const slug = await this.sluggifiedFileName();
 
-		const ribbonIconEl = this.addRibbonIcon('mountain', 'Push to Lavadocs', (evt: MouseEvent) => {		
+		const ribbonIconEl = this.addRibbonIcon('mountain', 'Push to Lavadocs', (evt: MouseEvent) => {
+			if (!title || !content || !slug) {
+				new Notice("No active file");
+				return;
+			}
 			this.pushToLavadocs(title, content, slug);
 		});
 		ribbonIconEl.addClass('lavadocs-ribbon-class');
@@ -52,7 +56,7 @@ export default class LavadocsPlugin extends Plugin {
 		await this.saveData(this.settings);
 	}
 
-	async pushToLavadocs(title: string | null, content: string | null, slug: string | null) {
+	async pushToLavadocs(title: string, content: string, slug: string) {
 		const requestParams: RequestUrlParam = {
 			method: "POST",
 			headers: {
@@ -96,8 +100,7 @@ export default class LavadocsPlugin extends Plugin {
 			const name = activeFile.basename;
 			return name;
 		} 
-			
-		new Notice("No active file");
+		
 		return null;
 	}
 
@@ -120,7 +123,7 @@ export default class LavadocsPlugin extends Plugin {
 			return titleSluggified;
 		}
 
-		return null
+		return null;
 	}
 }
 
