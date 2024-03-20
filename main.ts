@@ -1,4 +1,4 @@
-import { App, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { App, Notice, Plugin, PluginSettingTab, RequestUrlParam, Setting, requestUrl } from 'obsidian';
 
 interface LavadocsPluginSettings {
 	lavaKey: string;
@@ -15,18 +15,30 @@ export default class LavadocsPlugin extends Plugin {
 
 	async onload() {
 		await this.loadSettings();
+		const title = await this.getActiveFileName();
+		const content = await this.getActiveFileContent();
+		const slug = await this.sluggifiedFileName();
 
-		const ribbonIconEl = this.addRibbonIcon('mountain', 'Push to Lavadocs', (evt: MouseEvent) => {			
-			this.pushToLavadocs();
+		const ribbonIconEl = this.addRibbonIcon('mountain', 'Push to Lavadocs', (evt: MouseEvent) => {		
+			this.pushToLavadocs(title, content, slug);
 		});
 		ribbonIconEl.addClass('lavadocs-ribbon-class');
 
 		this.addCommand({
 			id: 'push-to-lavadocs',
 			name: 'Push',
-			callback: () => {
-				this.pushToLavadocs();
-			}
+			checkCallback: (checking: boolean) => {
+				if (title && content && slug) {
+
+					if (!checking) {
+						this.pushToLavadocs(title, content, slug);
+					}
+
+					return true;
+				}
+
+				return false;
+			},
 		});
 
 		this.addSettingTab(new LavadocsSettings(this.app, this));
@@ -40,8 +52,8 @@ export default class LavadocsPlugin extends Plugin {
 		await this.saveData(this.settings);
 	}
 
-	async pushToLavadocs() {
-		const response = await fetch("https://lavadocs.com/api/v1/documents", {
+	async pushToLavadocs(title: string | null, content: string | null, slug: string | null) {
+		const requestParams: RequestUrlParam = {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -49,14 +61,16 @@ export default class LavadocsPlugin extends Plugin {
 			},
 			body: JSON.stringify({
 				document : {
-					title: await this.getActiveFileName(),
-					content: await this.getActiveFileContent(),
-					slug: await this.sluggifiedFileName()
+					title,
+					content,
+					slug
 				}
-			})
-		})
-		
-		const data = await response.json();
+			}),
+			url: "https://lavadocs.com/api/v1/documents"
+		};
+
+		const response = requestUrl(requestParams); 
+		const data = await response.json;
 
 		if (data.error) {
 			if (data.error === "Unauthorized") {
@@ -81,9 +95,10 @@ export default class LavadocsPlugin extends Plugin {
 		if (activeFile) {
 			const name = activeFile.basename;
 			return name;
-		} else {
-			new Notice("No active file");
-		}
+		} 
+			
+		new Notice("No active file");
+		return null;
 	}
 
 	async getActiveFileContent() {
@@ -92,6 +107,8 @@ export default class LavadocsPlugin extends Plugin {
 			const fileData = await this.app.vault.read(activeFile);
 			return fileData;
 		}
+
+		return null;
 	}
 
 	async sluggifiedFileName() {
@@ -102,6 +119,8 @@ export default class LavadocsPlugin extends Plugin {
 			const titleSluggified = titleLowercaseCharsOnly.replace(/\s+/g, "-");
 			return titleSluggified;
 		}
+
+		return null
 	}
 }
 
