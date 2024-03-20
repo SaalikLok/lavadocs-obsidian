@@ -4,17 +4,27 @@ Welcome to the [Lavadocs](https://lavadocs.com) plugin for Obsidian! This plugin
 
 ### Prerequisites
 
-- A [Lavadocs](https://lavadocs.com) account is required to use this plugin. 
+- A [Lavadocs](https://lavadocs.com) account is required to use this plugin.
 
-### Manual Installation
+## Installation
+
+#### Option 1: Through Obsidian Community Plugins
+
+1. Search for "Lavadocs" in the Obsidian community plugin browser
+2. Install the plugin
+3. Enable the plugin
+4. Follow instructions in the "Setup" section below
+
+#### Option 2: Manual Installation
 
 1. Clone this repo.
 2. In the repo’s directory, `npm install` to install dependencies
 3. Run `npm run build` to compile to `main.js`
 4. Copy over `main.js`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`
 5. In settings, under “Community Plugins”, toggle the plugin on to activate it.
+6. Continue to the "Setup" section below
 
-### Setup
+## Setup
 
 After installing the plugin, you'll need to connect your Lavadocs account:
 
