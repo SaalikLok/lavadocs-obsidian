@@ -104,7 +104,7 @@ export default class LavadocsPlugin extends Plugin {
 	async getActiveFileContent() {
 		const activeFile = this.app.workspace.getActiveFile();
 		if (activeFile) {
-			const fileData = await this.app.vault.read(activeFile);
+			const fileData = await this.app.vault.cachedRead(activeFile);
 			return fileData;
 		}
 
