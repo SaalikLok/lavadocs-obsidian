@@ -1,8 +1,5 @@
 import { App, Notice, Plugin, PluginSettingTab, RequestUrlParam, Setting, TFile, requestUrl } from 'obsidian';
 
-const prodUrl = "https://lavadocs.com";
-const devUrl = "http://localhost:3000";
-
 interface LavadocsPluginSettings {
 	lavaKey: string;
 	openNewWindow: boolean;
@@ -30,26 +27,6 @@ export default class LavadocsPlugin extends Plugin {
 		});
 		ribbonIconEl.addClass('lavadocs-ribbon-class');
 
-		this.addCommand({
-			id: 'push-to-lavadocs',
-			name: 'Push',
-			checkCallback: (checking: boolean) => {
-				(async () => {
-					const { title, content, slug } = await this.getActiveFileDetails();
-
-					if (title && content && slug) {
-	
-						if (!checking) {
-							this.pushToLavadocs(title, content, slug);
-						}
-	
-						return true;
-					}
-					return false;
-				})();
-			},
-		});
-
 		this.addSettingTab(new LavadocsSettings(this.app, this));
 	}
 
@@ -63,7 +40,7 @@ export default class LavadocsPlugin extends Plugin {
 
 	async pushToLavadocs(title: string, content: string, slug: string) {
 		const requestParams: RequestUrlParam = {
-			url: `${devUrl}/api/v1/documents`,
+			url: "https://lavadocs.com/api/v1/documents",
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -86,7 +63,7 @@ export default class LavadocsPlugin extends Plugin {
 			new Notice("Pushed to Lavadocs!");
 
 			if (this.settings.openNewWindow) {
-				window.open(`${devUrl}/users/${data.username}/documents/${data.slug}`)
+				window.open(`https://lavadocs.com/users/${data.username}/documents/${data.slug}`)
 			}
 		} catch (error) {
 			if (error.status === 401) {
