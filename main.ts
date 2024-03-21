@@ -20,7 +20,6 @@ export default class LavadocsPlugin extends Plugin {
 			const { title, content, slug } = await this.getActiveFileDetails();
 			
 			if (!title || !content || !slug) {
-				new Notice("No active file");
 				return;
 			}
 			this.pushToLavadocs(title, content, slug);
@@ -80,25 +79,22 @@ export default class LavadocsPlugin extends Plugin {
 	async getActiveFileDetails() {
 		const activeFile = this.app.workspace.getActiveFile();
 
-		const title = activeFile?.basename;
-		const content = await this.getActiveFileContent(activeFile);
-		const slug = activeFile?.basename.toLowerCase().replace(/[^a-zA-Z0-9\s]/g, "");
-		
-		if (!title || !content || !slug) {
-			new Notice("No active file");
-			return { title: null, content: null, slug: null };
-		}
-
-		return { title, content, slug };
-	}
-
-	async getActiveFileContent(activeFile: TFile | null) {
 		if (activeFile) {
-			const fileData = await this.app.vault.cachedRead(activeFile);
-			return fileData;
-		}
+			const title = activeFile.basename;
+			const content = await this.app.vault.cachedRead(activeFile);
+			const slug = activeFile.basename.toLowerCase().replace(/[^a-zA-Z0-9\s]/g, "");
+			
 
-		return null;
+			if (!title || !content || !slug) {
+				new Notice("Can't push an empty file");
+				return { title: null, content: null, slug: null };
+			}
+
+			return { title, content, slug };
+		} 
+			
+		new Notice("No active file");
+		return { title: null, content: null, slug: null };
 	}
 }
 
