@@ -15,35 +15,16 @@ export default class LavadocsPlugin extends Plugin {
 
 	async onload() {
 		await this.loadSettings();
-		const title = await this.getActiveFileName();
-		const content = await this.getActiveFileContent();
-		const slug = await this.sluggifiedFileName();
-
-		const ribbonIconEl = this.addRibbonIcon('mountain', 'Push to Lavadocs', (evt: MouseEvent) => {
+		
+		const ribbonIconEl = this.addRibbonIcon('mountain', 'Push to Lavadocs', async (evt: MouseEvent) => {
+			const { title, content, slug } = await this.getActiveFileDetails();
+			
 			if (!title || !content || !slug) {
-				new Notice("No active file");
 				return;
 			}
 			this.pushToLavadocs(title, content, slug);
 		});
 		ribbonIconEl.addClass('lavadocs-ribbon-class');
-
-		this.addCommand({
-			id: 'push-to-lavadocs',
-			name: 'Push',
-			checkCallback: (checking: boolean) => {
-				if (title && content && slug) {
-
-					if (!checking) {
-						this.pushToLavadocs(title, content, slug);
-					}
-
-					return true;
-				}
-
-				return false;
-			},
-		});
 
 		this.addSettingTab(new LavadocsSettings(this.app, this));
 	}
@@ -57,7 +38,8 @@ export default class LavadocsPlugin extends Plugin {
 	}
 
 	async pushToLavadocs(title: string, content: string, slug: string) {
-		const requestParams: RequestUrlParam = {
+		const lavadocsRequestParams: RequestUrlParam = {
+			url: "https://lavadocs.com/api/v1/documents",
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -69,61 +51,49 @@ export default class LavadocsPlugin extends Plugin {
 					content,
 					slug
 				}
-			}),
-			url: "https://lavadocs.com/api/v1/documents"
+			})
 		};
 
-		const response = requestUrl(requestParams); 
-		const data = await response.json;
+		const lavadocsResponse = requestUrl(lavadocsRequestParams);
 
-		if (data.error) {
-			if (data.error === "Unauthorized") {
+		try {
+			const data = await lavadocsResponse.json;
+			new Notice("Pushed to Lavadocs!");
+
+			if (this.settings.openNewWindow) {
+				window.open(`https://lavadocs.com/users/${data.username}/documents/${data.slug}`)
+			}
+		} catch (error) {
+			if (error.status === 401) {
 				new Notice("Unauthorized, the gates are closed! Check your Lava Key in the settings.");
 				return;
 			}
-
-			new Notice(`Error pushing to Lavadocs: ${data.error}`);
-			console.error(data.error);
+	
+			new Notice(`Error pushing to Lavadocs: ${error.message}`);
+			console.error(error);
 			return;
 		}
-
-		new Notice("Pushed to Lavadocs!");
-
-		if (this.settings.openNewWindow) {
-			window.open(`https://lavadocs.com/users/${data.username}/documents/${data.slug}`)
-		}
 	}
 
-	async getActiveFileName() {
+	async getActiveFileDetails() {
 		const activeFile = this.app.workspace.getActiveFile();
+
 		if (activeFile) {
-			const name = activeFile.basename;
-			return name;
+			const title = activeFile.basename;
+			const content = await this.app.vault.cachedRead(activeFile);
+			const slug = activeFile.basename.toLowerCase().replace(/[^a-zA-Z0-9\s]/g, "");
+			
+
+			if (!title || !content || !slug) {
+				new Notice("Can't push an empty file");
+				return { title: null, content: null, slug: null };
+			}
+
+			return { title, content, slug };
 		} 
-		
-		return null;
-	}
-
-	async getActiveFileContent() {
-		const activeFile = this.app.workspace.getActiveFile();
-		if (activeFile) {
-			const fileData = await this.app.vault.cachedRead(activeFile);
-			return fileData;
-		}
-
-		return null;
-	}
-
-	async sluggifiedFileName() {
-		const activeFile = this.app.workspace.getActiveFile();
-
-		if (activeFile) {
-			const titleLowercaseCharsOnly = activeFile.basename.toLowerCase().replace(/[^a-zA-Z0-9\s]/g, "")
-			const titleSluggified = titleLowercaseCharsOnly.replace(/\s+/g, "-");
-			return titleSluggified;
-		}
-
-		return null;
+			
+		new Notice("No active file");
+		return { title: null, content: null, slug: null };
 	}
 }
 

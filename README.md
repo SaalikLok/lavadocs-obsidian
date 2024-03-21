@@ -37,8 +37,8 @@ After installing the plugin, you'll need to connect your Lavadocs account:
 With the Lavadocs plugin enabled, sharing your documents is straightforward:
 
 1. Open the document you wish to share in Obsidian.
-2. Click on the newly added ⛰️ mountain icon in your sidebar, or run “Push to Lavadocs” from your command palette.
-3. Your document will be pushed to Lavadocs, and you should be able to access and share it.
+2. Click on the newly added ⛰️ mountain icon in your sidebar.
+3. Your document will be pushed to Lavadocs, and you should be able to access and share it!
 
 ## Lavadocs Pricing
 
