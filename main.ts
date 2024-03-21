@@ -1,4 +1,4 @@
-import { App, Notice, Plugin, PluginSettingTab, RequestUrlParam, Setting, TFile, requestUrl } from 'obsidian';
+import { App, Notice, Plugin, PluginSettingTab, RequestUrlParam, Setting, requestUrl } from 'obsidian';
 
 interface LavadocsPluginSettings {
 	lavaKey: string;
@@ -38,7 +38,7 @@ export default class LavadocsPlugin extends Plugin {
 	}
 
 	async pushToLavadocs(title: string, content: string, slug: string) {
-		const requestParams: RequestUrlParam = {
+		const lavadocsRequestParams: RequestUrlParam = {
 			url: "https://lavadocs.com/api/v1/documents",
 			method: "POST",
 			headers: {
@@ -54,11 +54,10 @@ export default class LavadocsPlugin extends Plugin {
 			})
 		};
 
-		const response = requestUrl(requestParams);
+		const lavadocsResponse = requestUrl(lavadocsRequestParams);
 
 		try {
-			const data = await response.json;
-			
+			const data = await lavadocsResponse.json;
 			new Notice("Pushed to Lavadocs!");
 
 			if (this.settings.openNewWindow) {
