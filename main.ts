@@ -2,11 +2,13 @@ import { App, Notice, Plugin, PluginSettingTab, RequestUrlParam, Setting, reques
 
 interface LavadocsPluginSettings {
 	lavaKey: string;
+	url: string;
 	openNewWindow: boolean;
 }
 
 const DEFAULT_SETTINGS: LavadocsPluginSettings = {
 	lavaKey: '',
+	url: "https://lavadocs.com",
 	openNewWindow: true
 }
 
@@ -39,7 +41,7 @@ export default class LavadocsPlugin extends Plugin {
 
 	async pushToLavadocs(title: string, content: string, slug: string) {
 		const lavadocsRequestParams: RequestUrlParam = {
-			url: "https://lavadocs.com/api/v1/documents",
+			url: `${this.settings.url}/api/v1/documents`,
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -61,7 +63,7 @@ export default class LavadocsPlugin extends Plugin {
 			new Notice("Pushed to Lavadocs!");
 
 			if (this.settings.openNewWindow) {
-				window.open(`https://lavadocs.com/users/${data.username}/documents/${data.slug}`)
+				window.open(`${this.settings.url}/users/${data.username}/documents/${data.slug}`)
 			}
 		} catch (error) {
 			if (error.status === 401) {
@@ -130,5 +132,16 @@ class LavadocsSettings extends PluginSettingTab {
 					this.plugin.settings.openNewWindow = value;
 					await this.plugin.saveSettings();
 				}));
+		
+		new Setting(containerEl)
+		.setName("Hosted URL")
+		.setDesc("If you're hosting your own Lavadocs instance, enter the full url here.")
+		.addText(text => text
+			.setPlaceholder('https://lavadocs.com')
+			.setValue(this.plugin.settings.domain)
+			.onChange(async (value) => {
+				this.plugin.settings.domain = value;
+				await this.plugin.saveSettings();
+			}));
 	}
 }

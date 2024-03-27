@@ -31,6 +31,7 @@ After installing the plugin, you'll need to connect your Lavadocs account:
 1. In your browser, log into Lavadocs and copy your `Lava Key`. (It's in your [Account Settings](https://lavadocs.com/users/edit))
 2. In Obsidian, head to Settings > Community Plugins > Lavadocs.
 3. Paste in your “Lava Key” to authenticate your account.
+4. If you're self-hosting Lavadocs, include the full URL it's hosted on.
 
 ## Usage
 
@@ -44,8 +45,14 @@ With the Lavadocs plugin enabled, sharing your documents is straightforward:
 
 There's more on the [landing page](https://lavadocs.com/home), but the TLDR is: Your docs are yours to keep.
 
+Hosted edition:
+
 - **Start With**: 50 documents free.
 - **Additional Documents**: For every 100 additional documents, it's $4.99.
+
+Self-hosted edition:
+
+- Get access to the self-hosted edition code repository, with gift pricing: pay what you want.
 
 ## Privacy
 
