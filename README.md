@@ -31,7 +31,7 @@ After installing the plugin, you'll need to connect your Lavadocs account:
 1. In your browser, log into Lavadocs and copy your `Lava Key`. (It's in your [Account Settings](https://lavadocs.com/users/edit))
 2. In Obsidian, head to Settings > Community Plugins > Lavadocs.
 3. Paste in your “Lava Key” to authenticate your account.
-4. If you're self-hosting Lavadocs, include the domain it's hosted on.
+4. If you're self-hosting Lavadocs, include the full URL it's hosted on.
 
 ## Usage
 
