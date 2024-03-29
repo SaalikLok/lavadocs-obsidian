@@ -1,3 +1,4 @@
+import { get } from 'http';
 import { App, Notice, Plugin, PluginSettingTab, RequestUrlParam, Setting, requestUrl } from 'obsidian';
 
 interface LavadocsPluginSettings {
@@ -17,6 +18,29 @@ export default class LavadocsPlugin extends Plugin {
 
 	async onload() {
 		await this.loadSettings();
+
+		this.addCommand({
+			id: "push-to-lavadocs",
+			name: "Push",
+			checkCallback: (checking: boolean) => {
+				const activeFilePresent = this.app.workspace.getActiveFile() != null;
+
+				if (activeFilePresent) {
+					if (!checking) {
+						this.getActiveFileDetails().then(({ title, content, slug }) => {
+							if (!title || !content || !slug) {
+								return;
+							}
+							this.pushToLavadocs(title, content, slug);
+						})
+					}
+
+					return true;
+				}
+
+				return false;
+			},
+		});
 		
 		const ribbonIconEl = this.addRibbonIcon('mountain', 'Push to Lavadocs', async (evt: MouseEvent) => {
 			const { title, content, slug } = await this.getActiveFileDetails();
