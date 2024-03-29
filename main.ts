@@ -83,9 +83,9 @@ export default class LavadocsPlugin extends Plugin {
 		if (activeFile) {
 			const title = activeFile.basename;
 			const content = await this.app.vault.cachedRead(activeFile);
-			const slug = activeFile.basename.toLowerCase().replace(/[^a-zA-Z0-9\s]/g, "");
+			const titleLowercaseCharsOnly = activeFile.basename.toLowerCase().replace(/[^a-zA-Z0-9\s]/g, "")
+			const slug = titleLowercaseCharsOnly.replace(/\s+/g, "-");
 			
-
 			if (!title || !content || !slug) {
 				new Notice("Can't push an empty file");
 				return { title: null, content: null, slug: null };
@@ -138,9 +138,9 @@ class LavadocsSettings extends PluginSettingTab {
 		.setDesc("If you're hosting your own Lavadocs instance, enter the full url here.")
 		.addText(text => text
 			.setPlaceholder('https://lavadocs.com')
-			.setValue(this.plugin.settings.domain)
+			.setValue(this.plugin.settings.url)
 			.onChange(async (value) => {
-				this.plugin.settings.domain = value;
+				this.plugin.settings.url = value;
 				await this.plugin.saveSettings();
 			}));
 	}
