@@ -94,6 +94,16 @@ export default class LavadocsPlugin extends Plugin {
 				new Notice("Unauthorized, the gates are closed! Check your Lava Key in the settings.");
 				return;
 			}
+
+			if (error.status === 404) {
+				new Notice("Instance of Lavadocs not found. Check the URL in the settings.");
+				return;
+			}
+
+			if (error.message === "net::ERR_SSL_PROTOCOL_ERROR") {
+				new Notice("SSL protocol error. Check that your Lavadocs instance is serving on https, or change your URL to regular http.");
+				return;
+			}
 	
 			new Notice(`Error pushing to Lavadocs: ${error.message}`);
 			console.error(error);
