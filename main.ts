@@ -1,3 +1,4 @@
+import { get } from 'http';
 import { App, Notice, Plugin, PluginSettingTab, RequestUrlParam, Setting, requestUrl } from 'obsidian';
 
 interface LavadocsPluginSettings {
@@ -17,6 +18,29 @@ export default class LavadocsPlugin extends Plugin {
 
 	async onload() {
 		await this.loadSettings();
+
+		this.addCommand({
+			id: "push-to-lavadocs",
+			name: "Push",
+			checkCallback: (checking: boolean) => {
+				const activeFilePresent = this.app.workspace.getActiveFile() != null;
+
+				if (activeFilePresent) {
+					if (!checking) {
+						this.getActiveFileDetails().then(({ title, content, slug }) => {
+							if (!title || !content || !slug) {
+								return;
+							}
+							this.pushToLavadocs(title, content, slug);
+						})
+					}
+
+					return true;
+				}
+
+				return false;
+			},
+		});
 		
 		const ribbonIconEl = this.addRibbonIcon('mountain', 'Push to Lavadocs', async (evt: MouseEvent) => {
 			const { title, content, slug } = await this.getActiveFileDetails();
@@ -70,6 +94,16 @@ export default class LavadocsPlugin extends Plugin {
 				new Notice("Unauthorized, the gates are closed! Check your Lava Key in the settings.");
 				return;
 			}
+
+			if (error.status === 404) {
+				new Notice("Instance of Lavadocs not found. Check the URL in the settings.");
+				return;
+			}
+
+			if (error.message === "net::ERR_SSL_PROTOCOL_ERROR") {
+				new Notice("SSL protocol error. Check that your Lavadocs instance is serving on https, or change your URL to regular http.");
+				return;
+			}
 	
 			new Notice(`Error pushing to Lavadocs: ${error.message}`);
 			console.error(error);
@@ -83,9 +117,9 @@ export default class LavadocsPlugin extends Plugin {
 		if (activeFile) {
 			const title = activeFile.basename;
 			const content = await this.app.vault.cachedRead(activeFile);
-			const slug = activeFile.basename.toLowerCase().replace(/[^a-zA-Z0-9\s]/g, "");
+			const titleLowercaseCharsOnly = activeFile.basename.toLowerCase().replace(/[^a-zA-Z0-9\s]/g, "")
+			const slug = titleLowercaseCharsOnly.replace(/\s+/g, "-");
 			
-
 			if (!title || !content || !slug) {
 				new Notice("Can't push an empty file");
 				return { title: null, content: null, slug: null };
@@ -138,9 +172,9 @@ class LavadocsSettings extends PluginSettingTab {
 		.setDesc("If you're hosting your own Lavadocs instance, enter the full url here.")
 		.addText(text => text
 			.setPlaceholder('https://lavadocs.com')
-			.setValue(this.plugin.settings.domain)
+			.setValue(this.plugin.settings.url)
 			.onChange(async (value) => {
-				this.plugin.settings.domain = value;
+				this.plugin.settings.url = value;
 				await this.plugin.saveSettings();
 			}));
 	}
