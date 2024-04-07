@@ -1,4 +1,3 @@
-import { get } from 'http';
 import { App, Notice, Plugin, PluginSettingTab, RequestUrlParam, Setting, requestUrl } from 'obsidian';
 
 interface LavadocsPluginSettings {
@@ -92,6 +91,11 @@ export default class LavadocsPlugin extends Plugin {
 		} catch (error) {
 			if (error.status === 401) {
 				new Notice("Unauthorized, the gates are closed! Check your Lava Key in the settings.");
+				return;
+			}
+
+			if (error.status === 403) {
+				new Notice("Out of documents! Upgrade your account to push more.");
 				return;
 			}
 
